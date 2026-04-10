@@ -2,28 +2,52 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Random Nhóm Gen - Dark Mode</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random </title>
     <style>
-        /* Giao diện nền tối */
+        /* Thiết lập nền toàn trang */
         body {
-            background-color: #121212;
+            background-color: #0f0f0f;
             color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+            align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 30px;
+            min-height: 100vh;
+            margin: 0;
         }
 
-        h2 { margin-bottom: 20px; color: #00e676; }
+        /* Khung bao bọc chính (Card) */
+        .main-card {
+            background-color: #1a1a1a;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
 
+        h2 { 
+            margin-top: 0;
+            margin-bottom: 30px; 
+            color: #00e676; 
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 1.5rem;
+        }
+
+        /* Container chứa các ô vuông, căn giữa */
         .container {
             display: flex;
-            gap: 20px;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap; /* Tự xuống dòng nếu màn hình nhỏ */
+            margin-bottom: 30px;
         }
 
+        /* Phong cách các ô giá trị */
         .box {
             width: 60px;
             height: 60px;
@@ -31,82 +55,95 @@
             align-items: center;
             justify-content: center;
             border: 2px solid #00e676;
-            border-radius: 12px;
-            font-size: 28px;
-            font-weight: bold;
-            background-color: #1e1e1e;
-            box-shadow: 0 4px 15px rgba(0, 230, 118, 0.2);
-            transition: all 0.5s ease;
+            border-radius: 15px;
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(145deg, #1e1e1e, #252525);
+            box-shadow: 0 4px 15px rgba(0, 230, 118, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: default;
         }
 
-        /* Hiệu ứng khi ô thay đổi vị trí */
         .box:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 25px rgba(0, 230, 118, 0.4);
+            transform: scale(1.1);
+            background-color: #00e676;
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 230, 118, 0.4);
         }
 
+        /* Vùng hiển thị thời gian */
         .timer {
-            margin-top: 30px;
             font-size: 14px;
-            color: #888;
+            color: #aaa;
+            padding: 10px 20px;
+            background: #252525;
+            border-radius: 50px;
+            display: inline-block;
         }
 
-        #countdown { color: #ff5252; font-weight: bold; }
+        #countdown { 
+            color: #ff5252; 
+            font-weight: bold; 
+            font-family: monospace;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
 
-    <h2>Hệ Thống Sắp Xếp Ngẫu Nhiên</h2>
-    
-    <div class="container" id="grid">
-        </div>
+    <div class="main-card">
+        <h2>Sắp Xếp Gen</h2>
+        
+        <div class="container" id="grid">
+            </div>
 
-    <div class="timer">
-        Tự động xáo trộn sau: <span id="countdown">15</span> giây
+        <div class="timer">
+            Làm mới sau: <span id="countdown">15</span>s
+        </div>
     </div>
 
     <script>
         const groups = ['Ab', 'AA', 'bb', 'bA'];
         let timeLeft = 15;
 
-        // Hàm xáo trộn mảng
         function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex != 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
             }
             return array;
         }
 
-        // Hàm hiển thị
         function renderBoxes() {
             const container = document.getElementById('grid');
             container.innerHTML = '';
             
             const shuffled = shuffle([...groups]);
 
-            shuffled.forEach(item => {
+            shuffled.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = 'box';
                 div.textContent = item;
+                // Thêm hiệu ứng xuất hiện trễ một chút cho đẹp
+                div.style.animation = `fadeIn 0.3s ease forwards ${index * 0.1}s`;
                 container.appendChild(div);
             });
         }
 
-        // Hàm đếm ngược và tự động reset
         function startTimer() {
             setInterval(() => {
                 timeLeft--;
                 document.getElementById('countdown').textContent = timeLeft;
 
                 if (timeLeft <= 0) {
-                    renderBoxes(); // Xáo trộn lại
-                    timeLeft = 15; // Reset thời gian
+                    renderBoxes();
+                    timeLeft = 15;
                 }
             }, 1000);
         }
 
-        // Chạy lần đầu
         renderBoxes();
         startTimer();
     </script>
