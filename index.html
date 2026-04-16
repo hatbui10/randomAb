@@ -2,151 +2,257 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>loc dãy Lớn </title>
     <style>
-        /* Thiết lập nền toàn trang */
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-pink: #ff00ff;
+            --neon-purple: #bc13fe;
+            --bg: #050508;
+            --card: #0d0d12;
+        }
+
         body {
-            background-color: #0f0f0f;
-            color: #ffffff;
-            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
             display: flex;
+            justify-content: center;
+        }
+
+        /* Rule 3 cạnh: 30px top, 3px sides */
+        .app-container {
+            width: calc(100% - 6px);
+            margin: 30px 3px 0 3px;
+            background: var(--card);
+            border: 1px solid #1f1f26;
+            border-radius: 16px;
+            padding: 15px;
+            box-sizing: border-box;
+            box-shadow: 0 0 30px rgba(0,0,0,1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
             align-items: flex-start;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 20px;
+            margin-bottom: 15px;
         }
 
-        /* Khung bao bọc chính (Card) */
-        .main-card {
-            background-color: #1a1a1a;
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid #333;
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+            line-height: 1;
+        }
+
+        .counter-badge {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--neon-purple);
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: var(--neon-pink);
+            font-weight: bold;
+            font-size: 0.85rem;
             text-align: center;
-            max-width: 400px;
-            width: 90%;
+            min-width: 100px;
         }
 
-        h2 { 
-            margin-top: 0;
-            margin-bottom: 30px; 
-            color: #00e676; 
-            letter-spacing: 1px;
+        .upload-area {
+            background: rgba(255,255,255,0.03);
+            border: 1px dashed #333;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 12px;
+        }
+
+        input[type="file"] { width: 100%; font-size: 12px; color: #777; }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
             text-transform: uppercase;
-            font-size: 1.5rem;
-        }
-
-        /* Container chứa các ô vuông, căn giữa */
-        .container {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap; /* Tự xuống dòng nếu màn hình nhỏ */
-            margin-bottom: 30px;
-        }
-
-        /* Phong cách các ô giá trị */
-        .box {
-            width: 50px;
-            height: 50px;
+            cursor: pointer;
+            transition: 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid #00e676;
-            border-radius: 15px;
-            font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(145deg, #1e1e1e, #252525);
-            box-shadow: 0 4px 15px rgba(0, 230, 118, 0.1);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: default;
+            font-size: 0.9rem;
         }
 
-        .box:hover {
-            transform: scale(1.1);
-            background-color: #00e676;
+        .btn-render {
+            background: var(--neon-blue);
             color: #000;
-            box-shadow: 0 0 20px rgba(0, 230, 118, 0.4);
+            margin-bottom: 12px;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
         }
 
-        /* Vùng hiển thị thời gian */
-        .timer {
-            font-size: 14px;
-            color: #aaa;
-            padding: 10px 20px;
-            background: #252525;
-            border-radius: 50px;
-            display: inline-block;
+        /* Phần Fix vỡ Layout */
+        .logic-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            align-items: stretch;
         }
 
-        #countdown { 
-            color: #ff5252; 
-            font-weight: bold; 
-            font-family: monospace;
-            font-size: 16px;
+        .input-box {
+            flex: 1.5;
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            padding: 10px;
+            font-size: 0.9rem;
+            outline: none;
+            text-align: center;
+            min-width: 0; /* Quan trọng để flex không bị tràn */
         }
+
+        .btn-logic {
+            flex: 1;
+            background: transparent;
+            font-size: 0.75rem;
+            padding: 8px 4px;
+            line-height: 1.2;
+            min-width: 0;
+            text-align: center;
+        }
+
+        .btn-a { border: 2px solid var(--neon-pink); color: var(--neon-pink); }
+        .btn-b { border: 2px solid var(--neon-blue); color: var(--neon-blue); }
+
+        .btn-clear {
+            background: #1a1a1a;
+            color: #555;
+            font-size: 0.75rem;
+            margin-top: 5px;
+        }
+
+        #display {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+            gap: 4px;
+            background: #000;
+            padding: 10px;
+            border-radius: 8px;
+            height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+            border: 1px solid #1a1a1a;
+        }
+
+        .n-box {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #111;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        .hl-a { background: var(--neon-pink) !important; color: #fff; box-shadow: 0 0 8px var(--neon-pink); }
+        .hl-b { background: var(--neon-blue) !important; color: #000; box-shadow: 0 0 8px var(--neon-blue); }
     </style>
 </head>
 <body>
 
-    <div class="main-card">
-        <h2>Sắp Xếp Gen</h2>
-        
-        <div class="container" id="grid">
-            </div>
-
-        <div class="timer">
-            Làm mới sau: <span id="countdown">200</span>s
-        </div>
+<div class="app-container">
+    <div class="header">
+        <div class="logo">VN168<br>PRO</div>
+        <div class="counter-badge" id="counter">Tổng cộng:<br>0 số</div>
     </div>
 
-    <script>
-        const groups = ['Ab', 'AA', 'bb', 'bA'];
-        let timeLeft = 200;
+    <div class="upload-area">
+        <input type="file" id="fInp" multiple onchange="loadFiles()">
+    </div>
 
-        function shuffle(array) {
-            let currentIndex = array.length, randomIndex;
-            while (currentIndex != 0) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-            }
-            return array;
+    <button class="btn btn-render" onclick="render()">⚡ XỬ LÝ DỮ LIỆU (RENDER)</button>
+
+    <div class="logic-row">
+        <input type="number" id="seq" class="input-box" placeholder="Độ dài">
+        <button class="btn btn-logic btn-a" onclick="color('A')">TÔ MÀU A (≥5)</button>
+        <button class="btn btn-logic btn-b" onclick="color('b')">TÔ MÀU B (<5)</button>
+    </div>
+
+    <button class="btn btn-clear" onclick="reset()">XÓA TẤT CẢ BỘ NHỚ</button>
+
+    <div id="display"></div>
+</div>
+
+<script>
+    let raw = JSON.parse(localStorage.getItem('vn168_pro_data')) || [];
+
+    window.onload = () => {
+        updateStatus();
+        if(raw.length > 0) render();
+    };
+
+    function updateStatus() {
+        document.getElementById('counter').innerHTML = `Tổng cộng:<br>${raw.length} số`;
+    }
+
+    async function loadFiles() {
+        const files = document.getElementById('fInp').files;
+        for (let f of files) {
+            const txt = await f.text();
+            const ns = txt.match(/\d/g);
+            if (ns) raw = raw.concat(ns);
         }
+        localStorage.setItem('vn168_pro_data', JSON.stringify(raw));
+        updateStatus();
+        document.getElementById('fInp').value = "";
+    }
 
-        function renderBoxes() {
-            const container = document.getElementById('grid');
-            container.innerHTML = '';
-            
-            const shuffled = shuffle([...groups]);
+    function render() {
+        const area = document.getElementById('display');
+        area.innerHTML = "";
+        const frag = document.createDocumentFragment();
+        raw.forEach((n, i) => {
+            const d = document.createElement('div');
+            d.className = 'n-box';
+            d.id = 'i' + i;
+            d.innerText = n;
+            frag.appendChild(d);
+        });
+        area.appendChild(frag);
+    }
 
-            shuffled.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = 'box';
-                div.textContent = item;
-                // Thêm hiệu ứng xuất hiện trễ một chút cho đẹp
-                div.style.animation = `fadeIn 0.3s ease forwards ${index * 0.1}s`;
-                container.appendChild(div);
-            });
-        }
+    function color(t) {
+        document.querySelectorAll('.n-box').forEach(e => e.classList.remove('hl-a', 'hl-b'));
+        const L = parseInt(document.getElementById('seq').value);
+        if(!L) return;
 
-        function startTimer() {
-            setInterval(() => {
-                timeLeft--;
-                document.getElementById('countdown').textContent = timeLeft;
-
-                if (timeLeft <= 0) {
-                    renderBoxes();
-                    timeLeft = 15;
+        let s = [];
+        for(let i = 0; i <= raw.length; i++) {
+            const v = i < raw.length ? parseInt(raw[i]) : null;
+            let ok = (v !== null) && (t === 'A' ? v >= 5 : v < 5);
+            if(ok) { s.push(i); } 
+            else {
+                if(s.length >= L) {
+                    s.forEach(idx => document.getElementById('i'+idx).classList.add(t === 'A' ? 'hl-a' : 'hl-b'));
                 }
-            }, 1000);
+                s = [];
+            }
         }
+    }
 
-        renderBoxes();
-        startTimer();
-    </script>
+    function reset() {
+        if(confirm("Xóa sạch bộ nhớ?")) {
+            raw = [];
+            localStorage.removeItem('vn168_pro_data');
+            document.getElementById('display').innerHTML = "";
+            updateStatus();
+        }
+    }
+</script>
 
 </body>
 </html>
